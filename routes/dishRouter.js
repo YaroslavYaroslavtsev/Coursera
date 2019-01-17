@@ -185,7 +185,7 @@ dishRouter.route('/:dishId/comments/:commentId')
     
 	Dishes.findById(req.params.dishId)
     .then((dish) => {
-		let isOwner = req.user.id.equals(dish.comments.id(req.params.commentId).author);
+		let isOwner = req.user._id.equals(dish.comments.id(req.params.commentId).author._id);
         if (dish != null && dish.comments.id(req.params.commentId) != null && isOwner) {
             if (req.body.rating) {
                 dish.comments.id(req.params.commentId).rating = req.body.rating;
@@ -225,7 +225,7 @@ dishRouter.route('/:dishId/comments/:commentId')
 .delete(authenticate.verifyUser, (req, res, next) => {
     Dishes.findById(req.params.dishId)
     .then((dish) => {
-        let isOwner = req.user.id.equals(dish.comments.id(req.params.commentId).author);
+		let isOwner = req.user._id.equals(dish.comments.id(req.params.commentId).author._id);
         if (dish != null && dish.comments.id(req.params.commentId) != null && isOwner) {
             dish.comments.id(req.params.commentId).remove();
             dish.save()
