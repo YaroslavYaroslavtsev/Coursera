@@ -1,6 +1,6 @@
 var express = require('express');
 var router = express.Router();
-
+const cors = require('./cors');
 const bodyParser = require('body-parser');
 var User = require('../models/users');
 
@@ -9,7 +9,8 @@ var authenticate = require('../authenticate');
 
 router.use(bodyParser.json());
 /* GET users listing. */
-router.get('/', authenticate.verifyUser, authenticate.verifyAdmin, function(req, res, next) {
+router.route('/')
+.get(authenticate.verifyUser, authenticate.verifyAdmin, function(req, res, next) {
 	User.find({})
     .then((users) => {
         res.statusCode = 200;
@@ -19,7 +20,8 @@ router.get('/', authenticate.verifyUser, authenticate.verifyAdmin, function(req,
     .catch((err) => next(err));
 });
 
-router.post('/signup', (req, res, next) => {
+router.route('/signup')
+.post((req, res, next) => {
   User.register(new User({username: req.body.username, admin: req.body.admin}), 
     req.body.password, (err, user) => {
     if(err) {
@@ -49,7 +51,8 @@ router.post('/signup', (req, res, next) => {
   });
 });
 
-router.post('/login', passport.authenticate('local'), (req, res) => {
+router.route('/login')
+.post(passport.authenticate('local'), (req, res) => {
 
   var token = authenticate.getToken({_id: req.user._id});
   res.statusCode = 200;
@@ -57,7 +60,8 @@ router.post('/login', passport.authenticate('local'), (req, res) => {
   res.json({success: true, token: token, status: 'You are successfully logged in!'});
 });
 
-router.get('/logout', (req, res) => {
+router.route('logout')
+.get((req, res) => {
   if (req.session) {
     req.session.destroy();
     res.clearCookie('session-id');
