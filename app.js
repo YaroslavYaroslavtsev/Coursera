@@ -13,11 +13,14 @@ var authenticate = require('./authenticate');
 var config = require('./config');
 
 var indexRouter = require('./routes/index');
-var usersRouter = require('./routes/users');
+var usersRouter = require('./routes/userRouter');
 
 var dishRouter = require('./routes/dishRouter');
 var promoRouter = require('./routes/promoRouter');
 var leaderRouter = require('./routes/leaderRouter');
+
+const uploadRouter = require('./routes/uploadRouter');
+
 
 var app = express();
 
@@ -58,6 +61,8 @@ app.use(session({
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
+app.use('/imageUpload',uploadRouter);
+
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
